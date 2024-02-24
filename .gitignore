@@ -1,0 +1,7 @@
+__pycache__
+.idea
+.env
+/venv
+pip3
+python3
+*.tmp
