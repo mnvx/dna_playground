@@ -11,4 +11,4 @@ Or run `make` for additional help.
 
 Playground items:
 - `skew_gc.py` - diagram of incremental skew of `G` relative to `C`.\
-  ![Diagram example](docs/skew_gc.png)
+  ![Diagram example](doc/skew_gc.png)
