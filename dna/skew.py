@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-from dna_utils import utils
+from . import dna
 
 DEFAULT_SYMBOL_1 = 'G'
 DEFAULT_SYMBOL_2 = 'C'
@@ -9,50 +9,29 @@ DEFAULT_SYMBOL_2 = 'C'
 
 class Skew:
 
-    def __init__(self, dna_file):
-        self._dna_file = dna_file
+    def __init__(self, dna):
+        self._dna = dna
         self._skews = []
         self._increasing_diff = []
         self._block_size = 0
 
     def read_skews(self, block_size):
-        class BreakIt(Exception):
-            pass
-
         self._skews = []
         self._block_size = block_size
 
-        i = 0
-        with open(self._dna_file, 'r') as f:
-            try:
-                while True:
-                    dna = f.readline()
-                    if not dna:
-                        # eof
-                        break
-                    if not utils.is_dna(dna):
-                        # wrong line format
-                        continue
+        for i, nt in enumerate(self._dna.as_string()):
+            block = int(i / self._block_size)
 
-                    for j in range(len(dna)):
-                        symbol = dna[j].upper()
-                        if symbol not in ['C', 'G', 'T', 'A']:
-                            continue
+            if len(self._skews) < block + 1:
+                self._skews.append({
+                    dna.NT_A: 0,
+                    dna.NT_T: 0,
+                    dna.NT_G: 0,
+                    dna.NT_C: 0,
+                    dna.NT_U: 0,
+                })
 
-                        block = int(i / self._block_size)
-
-                        if len(self._skews) < block + 1:
-                            self._skews.append({
-                                'G': 0,
-                                'C': 0,
-                                'T': 0,
-                                'A': 0,
-                            })
-
-                        self._skews[block][symbol] += 1
-                        i += 1
-            except BreakIt:
-                pass
+            self._skews[block][nt] += 1
 
         return self._skews
 
